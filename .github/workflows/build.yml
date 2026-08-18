@@ -21,10 +21,11 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Fix Android Environment
+      - name: Fix Package Version & Generate Android
         run: |
+          sed -i 's/flutter_overlay_window:.*/flutter_overlay_window: any/g' pubspec.yaml
           rm -rf android
-          flutter create --platforms=android .
+          flutter create . --platforms=android --project-name nish_trader
 
       - name: Install Dependencies
         run: flutter pub get
@@ -37,4 +38,3 @@ jobs:
         with:
           name: TR-BOT-App
           path: build/app/outputs/flutter-apk/app-release.apk
-          
