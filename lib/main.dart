@@ -214,14 +214,24 @@ class _FloatingWidgetState extends State<FloatingWidget> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: signalColor,
-                      foregroundColor: Colors.black,
-                      minimumSize: const Size(double.infinity, 40),
-                    ),
-                    onPressed: isScanning ? null : fetchSignal,
-                    child: Text(isScanning ? "SCANNING..." : "TAP TO SCAN"),
+ElevatedButton(
+  onPressed: () async {
+    bool status = await FlutterOverlayWindow.isPermissionGranted();
+    if (!status) {
+      await FlutterOverlayWindow.requestPermission();
+    }
+    
+    // পারমিশন পাওয়ার পর ওভারলে অন করবে
+    if (await FlutterOverlayWindow.isPermissionGranted()) {
+      await FlutterOverlayWindow.showOverlay(
+        height: 500,
+        width: 350,
+        alignment: OverlayAlignment.center,
+        enableDrag: true,
+      );
+    }
+  },
+  child: const Text("Start Floating Bot Window"),
                   )
                 ],
               ),
