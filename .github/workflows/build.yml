@@ -21,10 +21,10 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Fix Android Build Structure
+      - name: Fix Android Environment
         run: |
           rm -rf android
-          flutter create . --platforms=android --project-name nish_trader
+          flutter create --platforms=android .
 
       - name: Install Dependencies
         run: flutter pub get
