@@ -21,8 +21,8 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Auto Fix Android Project
-        run: flutter create . --platforms=android --overwrite
+      - name: Generate Missing Android Files
+        run: flutter create --platforms=android .
 
       - name: Install Dependencies
         run: flutter pub get
