@@ -21,19 +21,36 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Rebuild Android Config Safely
+      - name: Clean Build & Inject Android Permissions
         run: |
-          rm -rf android
+          # 1. Back up main code
+          cp pubspec.yaml pubspec_bak.yaml
+          cp lib/main.dart main_bak.dart
+
+          # 2. Re-create clean flutter structure
+          rm -rf android lib pubspec.yaml
           flutter create --platforms=android --project-name binary_signal_bot .
+
+          # 3. Restore main code
+          cp pubspec_bak.yaml pubspec.yaml
+          cp main_bak.dart lib/main.dart
+
+          # 4. Set minSdkVersion to 21 for Overlay support
+          sed -i 's/flutter.minSdkVersion/21/g' android/app/build.gradle
+          sed -i 's/minSdkVersion.*/minSdkVersion 21/g' android/app/build.gradle
+
+          # 5. Inject Overlay and Internet Permissions
+          sed -i '/<application/i \    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>\n    <uses-permission android:name="android.permission.INTERNET"/>' android/app/src/main/AndroidManifest.xml
 
       - name: Install Dependencies
         run: flutter pub get
 
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --release --no-tree-shake-icons
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: TR-BOT-App
           path: build/app/outputs/flutter-apk/app-release.apk
+          
