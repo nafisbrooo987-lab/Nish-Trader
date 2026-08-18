@@ -35,4 +35,3 @@ jobs:
         with:
           name: TR-BOT-App
           path: build/app/outputs/flutter-apk/app-release.apk
-          
