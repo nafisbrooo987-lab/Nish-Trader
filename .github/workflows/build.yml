@@ -21,8 +21,10 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Generate Missing Android Files
-        run: flutter create --platforms=android .
+      - name: Rebuild Android Config Safely
+        run: |
+          rm -rf android
+          flutter create --platforms=android .
 
       - name: Install Dependencies
         run: flutter pub get
@@ -35,3 +37,4 @@ jobs:
         with:
           name: TR-BOT-App
           path: build/app/outputs/flutter-apk/app-release.apk
+          
